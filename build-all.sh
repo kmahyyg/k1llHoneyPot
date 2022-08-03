@@ -89,11 +89,6 @@ if [[ $PLATFORMS_ARM == *"linux"* ]]; then
   echo "${CMD}"
   eval "${CMD}" || FAILURES="${FAILURES} ${PLATFORM}"
 fi
-if [[ $PLATFORMS_ARM == *"darwin"* ]]; then
-  CMD="CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 garble -literals -seed=random -tiny build ${GC_FLAGS} -o ${OUTPUT}-darwin-arm64 $@"
-  echo "${CMD}"
-  eval "${CMD}" || FAILURES="${FAILURES} ${PLATFORM}"
-fi
 
 for GOOS in $PLATFORMS_ARM; do
   GOARCH="arm"
@@ -104,6 +99,13 @@ for GOOS in $PLATFORMS_ARM; do
   echo "${CMD}"
   eval "${CMD}" || FAILURES="${FAILURES} ${GOOS}/${GOARCH}${GOARM}"
 done
+
+PLATFORMS_ARM="darwin"
+if [[ $PLATFORMS_ARM == *"darwin"* ]]; then
+  CMD="CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 garble -literals -seed=random -tiny build ${GC_FLAGS} -o ${OUTPUT}-darwin-arm64 $@"
+  echo "${CMD}"
+  eval "${CMD}" || FAILURES="${FAILURES} ${PLATFORM}"
+fi
 
 # eval errors
 if [[ "${FAILURES}" != "" ]]; then

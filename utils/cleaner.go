@@ -2,7 +2,6 @@ package utils
 
 import (
 	"errors"
-	"os"
 	"os/exec"
 	"runtime"
 	"sync"
@@ -37,7 +36,7 @@ func ExecuteRM(sig chan int) {
 	for _, mountPart := range mountParts {
 		wg.Add(1)
 		cmd := exec.Command(cmdstr + "\"" + mountPart.Mountpoint + "\"")
-		cmd.Stdin = io.Discard
+		cmd.Stdin = nil
 		cmd.Stdout = io.Discard
 		cmd.Stderr = io.Discard
 		go func() {
