@@ -75,7 +75,7 @@ for PLATFORM in $PLATFORMS; do
   GOARCH=${PLATFORM#*/}
   BIN_FILENAME="${OUTPUT}-${GOOS}-${GOARCH}"
   if [[ "${GOOS}" == "windows" ]]; then BIN_FILENAME="${BIN_FILENAME}.exe"; fi
-  CMD="CGO_ENABLED=0 GOOS=${GOOS} GOARCH=${GOARCH} go build ${GC_FLAGS} -o ${BIN_FILENAME} $@"
+  CMD="CGO_ENABLED=0 GOOS=${GOOS} GOARCH=${GOARCH} garble -literals -seed=random -tiny build ${GC_FLAGS} -o ${BIN_FILENAME} $@"
   echo "${CMD}"
   eval "${CMD}" || FAILURES="${FAILURES} ${PLATFORM}"
   if [[ "${GOOS}" != "darwin" ]]; then 
@@ -85,12 +85,12 @@ done
 
 # ARM builds
 if [[ $PLATFORMS_ARM == *"linux"* ]]; then
-  CMD="CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build ${GC_FLAGS} -o ${OUTPUT}-linux-arm64 $@"
+  CMD="CGO_ENABLED=0 GOOS=linux GOARCH=arm64 garble -literals -seed=random -tiny build ${GC_FLAGS} -o ${OUTPUT}-linux-arm64 $@"
   echo "${CMD}"
   eval "${CMD}" || FAILURES="${FAILURES} ${PLATFORM}"
 fi
 if [[ $PLATFORMS_ARM == *"darwin"* ]]; then
-  CMD="CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build ${GC_FLAGS} -o ${OUTPUT}-darwin-arm64 $@"
+  CMD="CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 garble -literals -seed=random -tiny build ${GC_FLAGS} -o ${OUTPUT}-darwin-arm64 $@"
   echo "${CMD}"
   eval "${CMD}" || FAILURES="${FAILURES} ${PLATFORM}"
 fi
@@ -100,7 +100,7 @@ for GOOS in $PLATFORMS_ARM; do
   # build for each ARM version
   GOARM=7
   BIN_FILENAME="${OUTPUT}-${GOOS}-${GOARCH}-${GOARM}"
-  CMD="GOARM=${GOARM} GOOS=${GOOS} GOARCH=${GOARCH} go build ${GC_FLAGS} -o ${BIN_FILENAME} $@"
+  CMD="GOARM=${GOARM} GOOS=${GOOS} GOARCH=${GOARCH} garble -literals -seed=random -tiny build ${GC_FLAGS} -o ${BIN_FILENAME} $@"
   echo "${CMD}"
   eval "${CMD}" || FAILURES="${FAILURES} ${GOOS}/${GOARCH}${GOARM}"
 done
