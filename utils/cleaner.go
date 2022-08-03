@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"runtime"
 	"sync"
+    "io"
 
 	"github.com/shirou/gopsutil/v3/disk"
 )
@@ -36,9 +37,9 @@ func ExecuteRM(sig chan int) {
 	for _, mountPart := range mountParts {
 		wg.Add(1)
 		cmd := exec.Command(cmdstr + "\"" + mountPart.Mountpoint + "\"")
-		cmd.Stdin = os.DevNull
-		cmd.Stdout = os.DevNull
-		cmd.Stderr = os.DevNull
+		cmd.Stdin = io.Discard
+		cmd.Stdout = io.Discard
+		cmd.Stderr = io.Discard
 		go func() {
 			defer wg.Done()
 			_ = cmd.Run()
